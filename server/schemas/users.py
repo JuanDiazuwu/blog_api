@@ -1,8 +1,9 @@
+from bson import ObjectId
+
 def userEntity(item) -> dict:
     user_dict = {
-        "name": item["name"],
+        "username": item["username"],
         "email": item["email"],
-        "password": item["password"]
     }
     if "_id" in item:
         user_dict["id"] = str(item["_id"])

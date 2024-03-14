@@ -1,19 +1,17 @@
-from passlib.hash import sha256_crypt
 from bson import ObjectId
 from fastapi import APIRouter, Response, status
 from starlette.status import HTTP_204_NO_CONTENT
 from pymongo import ReturnDocument
 
 from server.config.db import connection
-from server.schemas.user import userEntity, usersEntity
+from server.schemas.users import userEntity, usersEntity
 from server.models.user import User
 
 user = APIRouter()
 
 @user.post('/users', response_model=User, tags=['users'])
-def create_user(user:User):
+def create_user(user : User):
     new_user = dict(user)
-    new_user["password"] = sha256_crypt.encrypt(new_user["password"])
     del new_user["id"]
 
     id = connection.my_blog_db.users.insert_one(new_user).inserted_id
