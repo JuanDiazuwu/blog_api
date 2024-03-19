@@ -1,9 +1,8 @@
 from pydantic import BaseModel
+from typing import Optional
 from datetime import datetime
-#from user import User
 
 class Comment(BaseModel):
     content : str
-    user_id : int # user : User
-    date : datetime
-
+    user_id : str #user : User
+    date: Optional[datetime] = datetime.now()
