@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 class Comment(BaseModel):
-    content : str
+    # publication : Publication
     user_id : str #user : User
-    date: Optional[datetime] = datetime.now()
+    content : str
+    created_at: Optional[datetime] = datetime.now()

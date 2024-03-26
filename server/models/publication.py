@@ -8,9 +8,9 @@ from comment import Comment
 
 class Publication(BaseModel):
     title : str
-    date: datetime
     content : str
+    user : User
     categories:  List[Category]
     tags : List[Tag]
     comments : List[Comment]
-    user : User
+    date: datetime
