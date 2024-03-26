@@ -12,7 +12,7 @@ user = APIRouter()
 @user.post('/users', response_model=User, tags=['users'])
 def create_user(user : User):
     new_user = dict(user)
-    del new_user["id"]
+    #del new_user["id"]
 
     id = connection.my_blog_db.users.insert_one(new_user).inserted_id
     user = connection.my_blog_db.users.find_one({"_id":id})
