@@ -36,6 +36,6 @@ async def update_user(id:str, user:User):
     return(find_user(id))
 
 @user.delete('/users/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['users'])
-def find_all_users(id:str):
+def user_delete(id:str):
     userEntity(connection.my_blog_db.users.find_one_and_delete({"_id":ObjectId(id)}))
     return Response(status_code=HTTP_204_NO_CONTENT)
