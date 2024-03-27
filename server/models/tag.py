@@ -3,7 +3,5 @@ from typing import Optional
 from datetime import datetime
 
 class Tag(BaseModel):
-    name : str
+    tag_name : str
     created_at : Optional[datetime] = datetime.now()
-
-
