@@ -1,5 +1,5 @@
 from bson import ObjectId
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, HTTPException
 from starlette.status import HTTP_204_NO_CONTENT
 from pymongo import ReturnDocument
 
@@ -16,7 +16,9 @@ def create_user(user : User):
 
     id = connection.my_blog_db.users.insert_one(new_user).inserted_id
     user = connection.my_blog_db.users.find_one({"_id":id})
-    return userEntity(user)
+    if user:
+        return user
+    raise HTTPException('400','Something went wrong')
 
 @user.get('/users', response_model=list[User], tags=['users'])
 def find_all_user():
