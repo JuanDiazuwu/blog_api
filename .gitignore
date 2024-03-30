@@ -163,6 +163,7 @@ request_http
 bin/
 lib64
 pyvenv.cfg
+.pylintrc
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
