@@ -1,39 +1,42 @@
-from bson import ObjectId
-from fastapi import APIRouter, Response, status, HTTPException
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
-from pymongo import ReturnDocument
+from fastapi import APIRouter, HTTPException
 
-from server.config.db import connection
-from server.schemas.comments import commentEntity,commentsEntity
-from server.models.comment import Comment
+from server.controllers.comments import (
+    index_comment, list_comments, create_comment, 
+    replace_comment, destroy_comment
+)
+from server.models.comment import Comment, UpdateComment
 
 comment = APIRouter()
 
-@comment.post('/comments', response_model=Comment, tags=['comments'])
-def create_comment(comment : Comment):
-    new_comment = dict(comment)
-    id = connection.my_blog_db.comments.insert_one(new_comment).inserted_id
-    comment = connection.my_blog_db.comments.find_one({"_id":id})
-    return commentEntity(comment)
+@comment.get('/comments/{id}', response_model=Comment)
+async def get_comment(id:str):
+    response = await index_comment(id)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no comment with the id {id}")
 
-@comment.get('/comments', response_model=list[Comment], tags=['comments'])
-def find_all_comment():
-    return commentsEntity(connection.my_blog_db.comments.find())
+@comment.get('/comments')
+async def get_comments():
+    response = await list_comments()
+    return response
 
-@comment.get('/comments/{id}', response_model=Comment, tags=['comments'])
-def find_comment(id:str):
-    return commentEntity(connection.my_blog_db.comments.find_one({"_id":ObjectId(id)}))
+@comment.post('/comments', response_model=Comment)
+async def post_comment(comment:Comment):
+    response = await create_comment(comment.model_dump())
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong")
 
-@comment.put('/comments/{id}', response_model=Comment, tags=['comments'])
-async def update_user(id:str, comment:Comment):
-    connection.my_blog_db.comments.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {"$set": comment.model_dump()},
-        return_document=ReturnDocument.AFTER
-    )
-    return(find_comment(id))
+@comment.put('/comments/{id}', response_model=Comment)
+async def put_comment(id:str, data:UpdateComment):
+    response = await replace_comment(id, data)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no comment with the id {id}")
 
-@comment.delete('/comments/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['comments'])
-def comment_delete(id:str):
-    commentEntity(connection.my_blog_db.comments.find_one_and_delete({"_id":ObjectId(id)}))
-    return Response(status_code=HTTP_204_NO_CONTENT)
+@comment.delete('/comments/{id}')
+async def delete_comment(id:str):
+    response = await destroy_comment(id)
+    if response:
+        return "Successfully deleted comment"
+    raise HTTPException(404, f"There is no comment with the id {id}")

@@ -1,39 +1,46 @@
-from bson import ObjectId
-from fastapi import APIRouter, Response, status
-from starlette.status import HTTP_204_NO_CONTENT
-from pymongo import ReturnDocument
+from fastapi import APIRouter, HTTPException
 
-from server.config.db import connection
-from server.schemas.categories import category_entity, categories_entity
-from server.models.category import Category
+from server.controllers.categories import (
+    index_category, index_by_name, list_categories, 
+    create_category, replace_category, destroy_category
+)
+from server.models.category import Category, UpdateCategory
 
 category = APIRouter()
 
-@category.post('/categories', response_model=Category, tags=['categories'])
-def create_category(category : Category):
-    new_category = dict(category)
-    id = connection.my_blog_db.categories.insert_one(new_category).inserted_id
-    category = connection.my_blog_db.categories.find_one({"_id":id})
-    return category_entity(category)
+@category.get('/categories/{id}', response_model=Category)
+async def get_category(id:str):
+    response = await index_category(id)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no category with the id {id}")
 
-@category.get('/categories', response_model=list[Category], tags=['categories'])
-def find_all_categories():
-    return categories_entity(connection.my_blog_db.categories.find())
+@category.get('/categories')
+async def get_categories():
+    response = await list_categories()
+    return response
 
-@category.get('/categories/{id}', response_model=Category, tags=['categories'])
-def find_category(id:str):
-    return category_entity(connection.my_blog_db.categories.find_one({"_id":ObjectId(id)}))
+@category.post('/categories', response_model=Category)
+async def post_category(category:Category):
+    category_found = await index_by_name(category.category_name)
+    if category_found:
+        raise HTTPException(409, "Category already exists")
 
-@category.put('/categories/{id}', response_model=Category, tags=['categories'])
-async def update_category(id:str, category:Category):
-    connection.my_blog_db.categories.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {"$set": category.model_dump()},
-        return_document=ReturnDocument.AFTER
-    )
-    return(find_category(id))
+    response = await create_category(category.model_dump())
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong")
 
-@category.delete('/categories/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['categories'])
-def category_delete(id:str):
-    category_entity(connection.my_blog_db.categories.find_one_and_delete({"_id":ObjectId(id)}))
-    return Response(status_code=HTTP_204_NO_CONTENT)
+@category.put('/categories/{id}', response_model=Category)
+async def put_category(id:str, data:UpdateCategory):
+    response = await replace_category(id, data)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no category with the id {id}")
+
+@category.delete('/categories/{id}')
+async def delete_category(id: str):
+    response = await destroy_category(id)
+    if response:
+        return "Successfully deleted category"
+    raise HTTPException(404, f"There is no category with the id {id}")

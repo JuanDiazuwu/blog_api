@@ -1,43 +1,41 @@
-from bson import ObjectId
-from fastapi import APIRouter, Response, status, HTTPException
-from starlette.status import HTTP_204_NO_CONTENT
-from pymongo import ReturnDocument
+from fastapi import APIRouter, HTTPException
 
-from server.config.db import connection
-from server.schemas.users import userEntity, usersEntity
-from server.models.user import User
+from server.controllers.users import (
+    index_user, list_users, create_user, replace_user, destroy_user
+)
+from server.models.user import User, UpdateUser
 
 user = APIRouter()
 
-@user.post('/users', response_model=User, tags=['users'])
-def create_user(user : User):
-    new_user = dict(user)
-    #del new_user["id"]
+@user.get('/users/{id}', response_model=User)
+async def get_user(id:str):
+    response = await index_user(id)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no user with the id {id}")
 
-    id = connection.my_blog_db.users.insert_one(new_user).inserted_id
-    user = connection.my_blog_db.users.find_one({"_id":id})
-    if user:
-        return user
-    raise HTTPException('400','Something went wrong')
+@user.get('/users')
+async def get_users():
+    response = await list_users()
+    return response
 
-@user.get('/users', response_model=list[User], tags=['users'])
-def find_all_user():
-    return usersEntity(connection.my_blog_db.users.find())
+@user.post('/users', response_model=User)
+async def post_user(user:User):
+    response = await create_user(user.model_dump())
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong")
 
-@user.get('/users/{id}', response_model=User, tags=['users'])
-def find_user(id:str):
-    return userEntity(connection.my_blog_db.users.find_one({"_id":ObjectId(id)}))
+@user.put('/users/{id}', response_model=User)
+async def put_user(id:str, data:UpdateUser):
+    response = await replace_user(id, data)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no user with the id {id}")
 
-@user.put('/users/{id}', response_model=User, tags=['users'])
-async def update_user(id:str, user:User):
-    connection.my_blog_db.users.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {"$set": user.model_dump()},
-        return_document=ReturnDocument.AFTER
-    )
-    return(find_user(id))
-
-@user.delete('/users/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['users'])
-def user_delete(id:str):
-    userEntity(connection.my_blog_db.users.find_one_and_delete({"_id":ObjectId(id)}))
-    return Response(status_code=HTTP_204_NO_CONTENT)
+@user.delete('/users/{id}')
+async def delete_user(id:str):
+    response = await destroy_user(id)
+    if response:
+        return "Successfully deleted user"
+    raise HTTPException(404, f"There is no user with the id {id}")
