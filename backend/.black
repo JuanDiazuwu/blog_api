@@ -1,0 +1,11 @@
+[tool.black]
+exclude = '''
+    \.git/,
+    \.venv/,
+    \.idea/,
+    \.vscode/,
+    __pycache__/,
+    .*\.pyc,
+    .*\.pyi,
+    .*\.egg-info/
+'''
