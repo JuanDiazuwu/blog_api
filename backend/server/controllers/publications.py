@@ -1,11 +1,10 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-
-# from decouple import config
+from decouple import config
 
 from server.models.publication import Publication, UpdatePublication
 
-client = AsyncIOMotorClient("mongodb://localhost:27017")
+client = AsyncIOMotorClient(config("MONGO_URL"))
 db = client.my_blog_db
 collection = db.publications
 
