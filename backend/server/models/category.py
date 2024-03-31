@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 from typing import Optional
 from datetime import datetime
 from bson import ObjectId
@@ -6,6 +6,8 @@ from bson import ObjectId
 
 class PyObjectId(ObjectId):
     @classmethod
+    # TODO[pydantic]: We couldn't refactor `__get_validators__`, please create the `__get_pydantic_core_schema__` manually.
+    # Check https://docs.pydantic.dev/latest/migration/#defining-custom-types for more information.
     def __get_validators__(cls):
         yield cls.validate
 
@@ -20,17 +22,9 @@ class Category(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     category_name: str
     created_at: Optional[datetime] = datetime.now()
-
-    class Config:
-        from_attributes = True
-        populate_by_alias = True
-        json_encoders = {ObjectId: str}
+    model_config = ConfigDict(from_attributes=True, populate_by_alias=True)
 
 
 class UpdateCategory(BaseModel):
     category_name: str
-
-    class Config:
-        from_attributes = True
-        populate_by_alias = True
-        json_encoders = {ObjectId: str}
+    model_config = ConfigDict(from_attributes=True, populate_by_alias=True)

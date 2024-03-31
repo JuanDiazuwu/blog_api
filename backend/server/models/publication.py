@@ -1,11 +1,13 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 from datetime import datetime
 from bson import ObjectId
 
 
 class PyObjectId(ObjectId):
     @classmethod
+    # TODO[pydantic]: We couldn't refactor `__get_validators__`, please create the `__get_pydantic_core_schema__` manually.
+    # Check https://docs.pydantic.dev/latest/migration/#defining-custom-types for more information.
     def __get_validators__(cls):
         yield cls.validate
 
@@ -23,21 +25,12 @@ class Publication(BaseModel):
     user_id: Optional[PyObjectId] = Field(alias="user_id", default=None)
     categories: Optional[List[PyObjectId]] = Field(alias="categories", default=None)
     tags: Optional[List[PyObjectId]] = Field(alias="tags", default=None)
-    comments: Optional[List[PyObjectId]] = Field(alias="tags   ", default=None)
+    comments: Optional[List[PyObjectId]] = Field(alias="comments", default=None)
     created_at: Optional[datetime] = datetime.now()
-
-    class Config:
-        from_attributes = True
-        populate_by_alias = True
-        json_encoders = {ObjectId: str}
+    model_config = ConfigDict(from_attributes=True, populate_by_alias=True)
 
 
 class UpdatePublication(BaseModel):
     title: str
     content: str
-    # TO DO categories, tags, comments
-
-    class Config:
-        from_attributes = True
-        populate_by_alias = True
-        json_encoders = {ObjectId: str}
+    model_config = ConfigDict(from_attributes=True, populate_by_alias=True)

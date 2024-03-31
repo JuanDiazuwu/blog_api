@@ -1,3 +1,9 @@
+"""
+This module initializes a FastAPI application and configures CORS middleware.
+It also includes routers for various API endpoints related to users, tags, 
+categories, comments, and publications.
+"""
+
 from decouple import config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +15,10 @@ from server.routes.comments import comment
 from server.routes.publications import publication
 
 app = FastAPI()
+
+@app.get('/')
+def hello_world():
+    return 'Server is running!!!'
 
 origins = [config("FRONTEND_URL")]
 
