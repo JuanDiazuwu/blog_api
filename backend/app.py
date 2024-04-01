@@ -20,7 +20,7 @@ app = FastAPI()
 def hello_world():
     return 'Server is running!!!'
 
-origins = [config("FRONTEND_URL")]
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,

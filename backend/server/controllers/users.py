@@ -8,7 +8,7 @@ from decouple import config
 
 from server.models.user import User, UpdateUser
 
-client = AsyncIOMotorClient(config("MONGO_URL"))
+client = AsyncIOMotorClient("mongodb://0.0.0.0:27017")
 db = client.my_blog_db
 collection = db.users
 
