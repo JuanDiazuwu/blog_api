@@ -4,6 +4,7 @@ import {Link, Routes, Route, useNavigate} from 'react-router-dom';
 
 function LogIn() {
 
+  const [user_id,setUserId] = useState('');
   const [username,setUser] = useState('');
   const [email,setEmail] = useState('');
   const navigate = useNavigate();
@@ -20,10 +21,13 @@ function LogIn() {
       //console.log(res.data[user])
       if(res.data[user]["username"]==username && res.data[user]["email"]==email ){
         console.log("Found");
-        navigate('/mainPage') ;
+        //console.log(res.data[user]["_id"])
+        setUserId(res.data[user]["_id"])
+        console.log(user_id)
+        //console.log(res)
+        navigate('/mainPage',{replace: true, state:{username,email,user_id}}) ;
       }
     }
-    
   }
 
   return (
