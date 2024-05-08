@@ -13,7 +13,7 @@ function SingIn() {
       email,
     });
 
-    console.log(res);
+    //console.log(res);
     
   }
 
@@ -33,7 +33,7 @@ function SingIn() {
           />
           <div className='block float-right'>
             <button className=' bg-emerald-800 block text-white mt-2 p-1 px-3 rounded-2xl ' >Registrarse</button>
-            <a href="/singIn" className='bg-emerald-800 inline-block text-white mt-2 p-1 px-3 rounded-2xl '>Crear Usuario</a>
+            <a href="/" className='bg-emerald-800 inline-block text-white mt-2 p-1 px-3 rounded-2xl '>LogIn</a>
           </div>
         </form>
     </>
