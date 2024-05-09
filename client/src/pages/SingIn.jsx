@@ -12,7 +12,7 @@ function SingIn() {
       username,
       email,
     });
-
+    
     //console.log(res);
     
   }
