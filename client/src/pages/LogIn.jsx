@@ -12,35 +12,42 @@ function LogIn() {
   const handleSumbit = async (e) => {
     e.preventDefault();
     
-    const res = await axios.get('http://localhost:8000/users', {
-      username,
-      email,
-    });
+    try {
+        const res = await axios.get('http://localhost:8000/users', {
+            params: {
+                username,
+                email,
+            }
+        });
 
-    for (let user in res.data) {
-      //console.log(res.data[user])
-      if(res.data[user]["username"]==username && res.data[user]["email"]==email ){
-        console.log("Found");
-        //console.log(res.data[user]["_id"])
-        setUserId(res.data[user]["_id"])
-        console.log(user_id)
-        //console.log(res)
-        navigate('/mainPage',{replace: true, state:{username,email,user_id}}) ;
-      }
+        for (let user of res.data) {
+            if (user.username === username && user.email === email) {
+                console.log("Found");
+                setUserId(user._id);
+                navigate('/mainPage', { replace: true, state: { username, email, user_id: user._id } });
+                return;
+            }
+        }
+        console.log("User not found");
+    } catch (error) {
+        console.error("Error:", error);
     }
-  }
+}
+
 
   return (
     <>
-        <form className='p-20 bg-blue-200  rounded-xl block  mt-[10%] mx-[30%]' onSubmit={handleSumbit}>
+        <form className='p-20 bg-blue-200  rounded-xl block  mt-[3%] mx-[30%] font-semibold' onSubmit={handleSumbit}>
           <h1 className='font-bold text-4xl pb-3'>LogIn</h1>
           <p>Usuario</p>
           <input 
+            className='font-normal'
             type='text'
             onChange={(e)=> setUser(e.target.value)} 
           />
           <p>Correo</p>
           <input 
+            className='font-normal'
             type='email'
             onChange={(e)=> setEmail(e.target.value)}
           />

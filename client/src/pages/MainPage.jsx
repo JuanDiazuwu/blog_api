@@ -22,24 +22,39 @@ function MainPage() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log('The link was clicked.');
-    navigate('/');
-  }
-  
+    if (location.state && location.state.user_id) {
+        console.log('The link was clicked.');
+        navigate('/publicatePage', { replace: true, state: { user_id: location.state.user_id } });
+    } else {
+        // Si no hay user_id en el estado de la ubicación, maneja el caso adecuadamente.
+        console.error("No se puede encontrar el ID de usuario en la ubicación.");
+        navigate('/'); // Redirige a la ruta principal o a donde sea necesario.
+    }
+}
+
+  const username = location.state && location.state.username != null && location.state.username !== undefined ? location.state.username : null;
   return (
-    <div className='h-fit p-5 bg-blue-200 flex rounded-xl m-10'>
-        <div className='p-1 bg-white  rounded-xl w-3/4  ' >
-            <PublishList publish={publish}/>
+  <>
+    <div className='h-fit p-5 bg-blue-200 flex rounded-xl mx-10'>
+      <div className='p-1 bg-white  rounded-xl w-3/4  ' >
+          <PublishList publish={publish}/>
+      </div>
+      {username ?(
+      <>
+        <div className='p-5'>
+          <div className='rounded-xl flex flex-col items-center pb-10'>
+            <h1 className='text-3xl text-center font-semibold'>Bienvenido {location.state.username}</h1>
+          </div>
+          <div className='rounded-xl flex flex-col items-center'>
+            <button className='bg-emerald-800 text-white rounded-2xl p-3 text-xl ml-10 font-bold' onClick={handleClick}>Crear publicación</button>
+          </div>
         </div>
-        <div className='flex w-1/2'>
-            <div className='w-1/2'></div>
-            <div className='p-1 rounded-xl w-fit pl-85 pt-10'>
-              <h1 className='text-3xl pb-10 text-center'>Bienvenido {location.state.username}</h1>
-              <button className=' bg-emerald-800 block text-white mt-2 p-1 px-10 rounded-2xl ' onClick={handleClick}>Crear publicación</button>
-            </div>
-            
-        </div>
+      </>
+      )
+      :(<></>)
+      }
     </div>
+  </>
   )
 }
 

@@ -19,15 +19,17 @@ function SingIn() {
 
   return (
     <>
-        <form className='p-20 bg-blue-200  rounded-xl block  mt-[10%] mx-[30%]' onSubmit={handleSumbit}>
+        <form className='p-20 bg-blue-200  rounded-xl block  mt-[10%] mx-[30%] font-semibold' onSubmit={handleSumbit}>
           <h1 className='font-bold text-4xl pb-3'>SingIn</h1>
           <p>Usuario</p>
           <input 
+            className='font-normal'
             type='text'
             onChange={(e)=> setUser(e.target.value)} 
           />
           <p>Correo</p>
           <input 
+            className='font-normal'
             type='email'
             onChange={(e)=> setEmail(e.target.value)}
           />
