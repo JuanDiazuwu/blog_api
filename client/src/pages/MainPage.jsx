@@ -23,8 +23,7 @@ function MainPage() {
   const handleClick = (e) => {
     e.preventDefault();
     if (location.state && location.state.user_id) {
-        console.log('The link was clicked.');
-        navigate('/publicatePage', { replace: true, state: { user_id: location.state.user_id } });
+        navigate('/publicatePage', { replace: true, state: { user_id: location.state.user_id }});
     } else {
         // Si no hay user_id en el estado de la ubicación, maneja el caso adecuadamente.
         console.error("No se puede encontrar el ID de usuario en la ubicación.");
@@ -33,11 +32,12 @@ function MainPage() {
 }
 
   const username = location.state && location.state.username != null && location.state.username !== undefined ? location.state.username : null;
+  const user_id = location.state && location.state.user_id != null && location.state.user_id !== undefined ? location.state.user_id : null;
   return (
   <>
     <div className='h-fit p-5 bg-blue-200 flex rounded-xl mx-10'>
       <div className='p-1 bg-white  rounded-xl w-3/4  ' >
-          <PublishList publish={publish}/>
+          <PublishList publish={publish} user_id={user_id}/>
       </div>
       {username ?(
       <>

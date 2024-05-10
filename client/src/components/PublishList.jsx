@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function PublishList({ publish }) {
+function PublishList({ publish, user_id }) {
   const [usernames, setUsernames] = useState({});
   const [publicationTags, setPublicationTags] = useState({});
   const [publicationCategories, setPublicationCategories] = useState({});
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUsernamesAndTags = async () => {
       const userIds = publish.map(p => p.user_id).filter(Boolean);
       const publishTags = publish.map(p => p.tags).filter(Boolean);
       const publishCategories = publish.map(p => p.categories).filter(Boolean);
-      //console.log(publish)
+      
       if (userIds.length === 0) {
         return;
       }
@@ -63,11 +65,15 @@ function PublishList({ publish }) {
     fetchUsernamesAndTags();
   }, [publish]);
 
+  const expandPublication = (inter_publish) => {
+    navigate("/publicationPage", { replace: true, state: { user_id: user_id, publish: inter_publish } })
+  };
+
   return (
     <>
       {publish.map(publishItem => (
         <div key={publishItem._id} className='p-5'>
-          <h1 className='text-2xl p-2'>{publishItem.title}</h1>
+          <button onClick={()=>{expandPublication(publishItem)}} className='text-2xl p-2 font-bold'>{publishItem.title}</button>
           <p className='bg-slate-200 p-3 rounded-2xl text-ellipsis overflow-hidden'>{publishItem.content}</p>
           <p>Publicado por: {publishItem.user_id ? usernames[publishItem.user_id] || 'Desconocido' : 'Desconocido'}</p>
           <div className='flex flex-row p-1'>
