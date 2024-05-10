@@ -3,6 +3,7 @@ import LogIn from './pages/LogIn'
 import SingIn from './pages/SingIn'
 import MainPage from "./pages/MainPage"
 import Publicate from "./pages/Publicate"
+import Publication from "./pages/Publication"
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/singIn" element={<SingIn/>}/>
             <Route path="/mainPage" element={<MainPage/>}/>
             <Route path="/publicatePage" element={<Publicate/>}/>
+            <Route path="/publicationPage" element={<Publication/>}/>
           </Routes>
         </BrowserRouter>
       </div>

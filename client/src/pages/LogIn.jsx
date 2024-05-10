@@ -8,12 +8,13 @@ function LogIn() {
   const [username,setUser] = useState('');
   const [email,setEmail] = useState('');
   const navigate = useNavigate();
+  
 
   const handleSumbit = async (e) => {
     e.preventDefault();
     
     try {
-        const res = await axios.get('http://localhost:8000/users', {
+        const res = await axios.get("http://localhost:8000/users", {
             params: {
                 username,
                 email,
