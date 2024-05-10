@@ -31,6 +31,6 @@ class Publication(BaseModel):
 
 
 class UpdatePublication(BaseModel):
-    title: str
-    content: str
+    title: Optional[str] = None 
+    content: Optional[str] = None
     model_config = ConfigDict(from_attributes=True, populate_by_alias=True)

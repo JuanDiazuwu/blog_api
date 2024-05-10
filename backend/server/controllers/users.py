@@ -8,7 +8,9 @@ from decouple import config
 
 from server.models.user import User, UpdateUser
 
-client = AsyncIOMotorClient("mongodb://0.0.0.0:27017")
+#mongodb://<dbUser>?:<dbPass>?@<url>:<port>/<dbName>
+client = AsyncIOMotorClient("mongodb://localhost:27017")
+#client = AsyncIOMotorClient("mongodb+srv://juandiazfdez1992:B4u5Foj65ywFjgWH@mycluster.gzy01cv.mongodb.net/?retryWrites=true&w=majority&appName=MyCluster")
 db = client.my_blog_db
 collection = db.users
 

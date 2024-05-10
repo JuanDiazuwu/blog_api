@@ -4,7 +4,7 @@ from decouple import config
 
 from server.models.publication import Publication, UpdatePublication
 
-client = AsyncIOMotorClient("mongodb://0.0.0.0:27017")
+client = AsyncIOMotorClient("mongodb://localhost:27017")
 db = client.my_blog_db
 collection = db.publications
 

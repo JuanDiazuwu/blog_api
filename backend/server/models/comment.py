@@ -28,5 +28,5 @@ class Comment(BaseModel):
 
 
 class UpdateComment(BaseModel):
-    content: str
+    content: Optional[str] = None
     model_config = ConfigDict(from_attributes=True, populate_by_alias=True)
