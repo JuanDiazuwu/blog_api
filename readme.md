@@ -66,11 +66,19 @@ uvicorn app:app --reload
 cd client
 ```
 
+8. Install node dependencies:
+
+```
+npm install
+```
+
+9. Run app:
+
 ``` bash
 npm run dev
 ```
 
-8. Open a browser and navigate to `http://127.0.0.1:5173` to view backend's docs.
+10. Open a browser and navigate to `http://127.0.0.1:5173` to the web.
 
 ### Run with docker
 
