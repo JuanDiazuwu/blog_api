@@ -1,3 +1,8 @@
+/**
+ * En las librerías usadas en este componente se destacan react-select/animated
+ * y react-select las cuales permiten usar un componetne pre-diseñado para
+ * hacer la interfaz mas intuitiva
+ */
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -22,7 +27,12 @@ function Publicate() {
 
     const [newTag, setNewTag] = useState("");
     const [newCategory, setNewCategory] = useState("");
-
+    /**
+     * Cada vez que el componente se carga se comprueba si el usuario entro con
+     * un usuario, carga los tags y categorias que se encuentran en la base de
+     * datos, mediante el método get, estas se almacenan en el estado del
+     * componente
+     */
     useEffect(() => {
         setUser(location.state.user_id)
         if (!location.state || !location.state.user_id) {
@@ -40,7 +50,10 @@ function Publicate() {
         }
         fetchTagsAndCategories();
     }, [location.state, navigate]);
-
+    /**
+     * Para crear la publicación se manda una petición post a publications
+     * se manejan los errores de existir
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -80,7 +93,10 @@ function Publicate() {
         }
 
     }
-
+    /**
+     * Esta función si se agrega un nuevo tag se llama a un método post
+     * a la ruta de tags para subir los tags
+     */
     const handleAddTags = async () => {
         
         try {
@@ -109,7 +125,10 @@ function Publicate() {
             }
         }
     };
-
+    /**
+     * Esta función similar a la anterior agrega una nueva categoria
+     *  se llama a un método posta la ruta de tags para subir categories
+     */
     const handleAddCategories = async () => {
         
         try {
@@ -118,6 +137,7 @@ function Publicate() {
             });
             if (res.status === 200) {
                 console.log("Respuesta válida")
+                // TODO: Mostrar verificación al usuario de que se subio exitosamente
             } else {
                 console.log("Respuesta inválida")
                 setErrorMessage("Formulario incompleto.");
@@ -138,15 +158,20 @@ function Publicate() {
             }
         }
     };
-
+    // Ambas funciones ya sea de tags o de categories almacenan los valores seleccionados
     const handleTagChange = (selectedOptions) => {
         setTags(selectedOptions.map((option)=> option.value))
     };
-
     const handleCategoryChange = (selectedOptions) => {
         setCategories(selectedOptions.map((option)=> option.value))
     };
-
+    /**
+     * El html muestra un formulario con inputs para el titulo de la publicación
+     * el contenido, un componente Select para seleccionar los tags o categorias
+     * deseados, también muestra un botón para subir el formulario, en la parte
+     * de abajo se tienen dos campos uno de tags y uno de categories para agregar
+     * categorias que no existen.
+     */
     return (
         <>
         <div className='p-10 pb-20 bg-teal-700 rounded-xl mx-[10%] text-white font-bold'>

@@ -7,7 +7,12 @@ function PublishList({ publish, user_id }) {
   const [publicationTags, setPublicationTags] = useState({});
   const [publicationCategories, setPublicationCategories] = useState({});
   const navigate = useNavigate()
-
+  /**
+   * El componente requiere obtener los datos de cada publicaciones, para lo cual
+   * hace consultas a users en la API, también requiere tags y categorias una vez
+   * los obtiene almacena mapas para cada uno de estos en caso de que las publicaciones
+   * compartan tags. categorias o usuario
+   */
   useEffect(() => {
     const fetchUsernamesAndTags = async () => {
       const userIds = publish.map(p => p.user_id).filter(Boolean);
@@ -64,11 +69,17 @@ function PublishList({ publish, user_id }) {
 
     fetchUsernamesAndTags();
   }, [publish]);
-
+  /**
+   * Esta función permite ir a la pagina de publicationPage en la que se
+   * muestra mas información de la publicación tales como los comentarios
+   */
   const expandPublication = (inter_publish) => {
     navigate("/publicationPage", { replace: true, state: { user_id: user_id, publish: inter_publish } })
   };
-
+  /**
+   * Aquí se despliega el html del componente que muestra de manera pequeña
+   * los datos de la publicación
+   */
   return (
     <>
       {publish.map(publishItem => (

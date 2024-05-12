@@ -33,4 +33,5 @@ class Publication(BaseModel):
 class UpdatePublication(BaseModel):
     title: Optional[str] = None 
     content: Optional[str] = None
+    comments: Optional[List[PyObjectId]] = None
     model_config = ConfigDict(from_attributes=True, populate_by_alias=True)

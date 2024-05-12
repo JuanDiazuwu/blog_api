@@ -14,7 +14,12 @@ function Publication() {
     const [oldComments, setOldComments] = useState([]);
     const [updatedComments, setUpdatedComments] = useState([]);
     const [commentsUsernames, setCommentsUsernames] = useState({});
-
+    /**
+     * Para los usuarios que ingresan con su usuario se les permite crear comentarios
+     * para lo cual se requiere obtener los datos de la ruta de mainPage relacionados
+     * con el usuario estos datos junto con el comentario y la publicación sobre
+     * la que se esta haciendo el comentario permite crear el comentario
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -62,7 +67,10 @@ function Publication() {
             console.log( "Error:", error );
         }
     };
-
+    /**
+     * Para obtener los usuarios que publicaron los comentarios se necesita
+     * obtenerlos y guardarlos en un mapa para acceder a ellos fácilmente
+     */
     const fetchUsers = async (e) => {
         const userCommentResponse = await Promise.all(publicationComments.map((response)=>
             axios.get(`http://localhost:8000/users/${response.data.user_id}`)
@@ -75,7 +83,10 @@ function Publication() {
         setCommentsUsernames(usernameCommentMap)
         console.log("Call")
     };
-
+    /**
+     * cada que se detecta un cambio la pagina verifica si el usuario se encuentra
+     * iniciado en su sesión, también obtiene los tags y categorias de la publicación
+     */
     useEffect(() => {
         if (location.state && location.state.user_id) {
             setUserLogInController(true)
@@ -134,7 +145,10 @@ function Publication() {
     }, [publish,publicationComments])
     
    
-
+    /**
+     * Esta función solo esta disponible si eres el propietario de la publicación
+     * y permite mandar un método delete a la base de datos para borrar la publicación
+     */
     const deletePublication = async (e) => {
         e.preventDefault();
         
@@ -142,7 +156,12 @@ function Publication() {
         console.log(res)
     };
 
-
+    /**
+     * En html se encuentran los datos de la publicación, ya sea su cuenta con tags
+     * o no, también permite habilitar la creación de comentarios si el usuario
+     * esta en su sesión, por ultimo muestra los comentarios si es que la 
+     * publicación cuenta con ellos
+     */
     return (
         <>
             <div className='m-5 p-5 bg-white rounded-2xl'>
