@@ -8,14 +8,25 @@ import React, { useState } from 'react';
 function SingIn() {
   const [username,setUser] = useState('')
   const [email,setEmail] = useState('')
-
+  const [deployMessage, setDeployMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const handleSumbit = async (e) => {
     e.preventDefault();
-    
-    const res = await axios.post('http://localhost:8000/users', {
-      username,
-      email,
-    });
+    setErrorMessage('')
+    try {
+      const res = await axios.post('http://localhost:8000/users', {
+        username,
+        email,
+      });
+      if (res.status === 200) {
+        setDeployMessage("Se registro exitosamente")
+      }
+      
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrorMessage("Verifique los datos de registro")
+      }
+    }
     // TODO: Avisar a el usuario que se genero su usuario correctamente
   }
   /**
@@ -38,6 +49,8 @@ function SingIn() {
             type='email'
             onChange={(e)=> setEmail(e.target.value)}
           />
+          {deployMessage &&<p className='p-2 text-blue-600'>{deployMessage}</p> }
+          {errorMessage &&<p className='p-2 text-red-600'>{errorMessage}</p> }
           <div className='block float-right'>
             <button className=' bg-emerald-800 block text-white mt-2 p-1 px-3 rounded-2xl ' >Registrarse</button>
             <a href="/" className='bg-emerald-800 inline-block text-white mt-2 p-1 px-3 rounded-2xl '>LogIn</a>

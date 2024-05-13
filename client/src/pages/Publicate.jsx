@@ -15,6 +15,7 @@ function Publicate() {
     const navigate = useNavigate();
     const location = useLocation();
     const [errorMessage, setErrorMessage] = useState("");
+    const [deployMessage, setDeployMessage] = useState('');
     // Variables para almacenar los tags y categorias en la BD
     const [tagsList, setTagsList] = useState({});
     const [categoriesList, setCategoriesList] = useState({});
@@ -55,6 +56,7 @@ function Publicate() {
      * se manejan los errores de existir
      */
     const handleSubmit = async (e) => {
+        setErrorMessage('');
         e.preventDefault();
         try {
             console.log(user_id)
@@ -72,6 +74,7 @@ function Publicate() {
                 setTags([]);
                 setCategories([]);
                 setErrorMessage("");
+                setDeployMessage("Se agrego la publicación exitosamente")
             } else {
                 console.log("Respuesta inválida")
                 setErrorMessage("Formulario incompleto.");
@@ -98,13 +101,14 @@ function Publicate() {
      * a la ruta de tags para subir los tags
      */
     const handleAddTags = async () => {
-        
+        setErrorMessage('');
         try {
             const res = await axios.post('http://localhost:8000/tags', {
             "tag_name":newTag
             });
             if (res.status === 200) {
                 console.log("Respuesta válida")
+                setDeployMessage("Se agrego el tag exitosamente, reinicie la pagina")
             } else {
                 console.log("Respuesta inválida")
                 setErrorMessage("Formulario incompleto.");
@@ -130,13 +134,14 @@ function Publicate() {
      *  se llama a un método posta la ruta de tags para subir categories
      */
     const handleAddCategories = async () => {
-        
+        setErrorMessage('');
         try {
             const res = await axios.post('http://localhost:8000/categories', {
             "category_name":newCategory
             });
             if (res.status === 200) {
                 console.log("Respuesta válida")
+                setDeployMessage("Se agrego la categoria exitosamente, reinicie la pagina")
                 // TODO: Mostrar verificación al usuario de que se subio exitosamente
             } else {
                 console.log("Respuesta inválida")
@@ -202,7 +207,8 @@ function Publicate() {
                     options={tagsList}
                     onChange={handleTagChange}
                 />
-                {errorMessage && <p className=" text-blue-200">{errorMessage}</p>}
+                {errorMessage && <p className=" text-red-600">{errorMessage}</p>}
+                {deployMessage &&<p className='p-2 text-green-200'>{deployMessage}</p> }
                 <div className='block float-right'>
                     <button className='bg-emerald-800 block text-white mt-2 p-1 px-3 rounded-2xl mb-10'>Publicar</button>
                 </div>

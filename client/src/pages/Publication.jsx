@@ -142,7 +142,7 @@ function Publication() {
         };
         fetchUsernamesAndTags();
         fetchUsers();
-    }, [publish,publicationComments])
+    }, [publish,publicationComments,publicationTags])
     
    
     /**

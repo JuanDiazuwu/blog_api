@@ -13,6 +13,7 @@ function LogIn() {
   const [username,setUser] = useState('');
   const [email,setEmail] = useState('');
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   
   /* Esta función maneja que cada que se suban datos consulta en la base de
      datos los usuarios si encuentra un usuario cuyo email y nombre sean
@@ -32,15 +33,18 @@ function LogIn() {
 
         for (let user of res.data) {
             if (user.username === username && user.email === email) {
-                console.log("Found");
+                //console.log("Found");
                 setUserId(user._id);
                 navigate('/mainPage', { replace: true, state: { username, email, user_id: user._id } });
                 return;
             }
         }
+        setErrorMessage("Usuario no encontrado")
         console.log("User not found");
-    } catch (error) {
-        console.error("Error:", error);
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrorMessage("Verifique los datos de registro")
+      }
     }
 }
 
@@ -66,6 +70,7 @@ function LogIn() {
             type='email'
             onChange={(e)=> setEmail(e.target.value)}
           />
+          {errorMessage &&<p className='p-2 text-red-600'>{errorMessage}</p> }
           <div className='block float-right'>
             <button className=' bg-emerald-800 block text-white mt-2 p-1 px-3 rounded-2xl ' >Ingresar</button>
             <a href="/singIn" className='bg-emerald-800 inline-block text-white mt-2 p-1 px-3 rounded-2xl '>Crear Usuario</a>
